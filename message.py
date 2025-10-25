@@ -1,29 +1,28 @@
 ABOUT_TEXT = """
-### 🔍 About This Tool
+### 🔍 À propos de cet outil
 
-This is an on-demand SERP checker tool that retrieves Google search rankings using the Serper.dev API. It runs with your API key in your browser.  
+Ceci est un outil de vérification SERP à la demande qui récupère les classements de recherche Google en utilisant l'API Serper.dev. Il s'exécute avec votre clé API dans votre navigateur.  
 
-🔹 No API key storage – Your API key is never saved.  
-🔹 Uses Serper.dev – A powerful Google Search API offering 2,500 free queries without a credit card.  
-🔹 Each query uses **2 credits** and fetches up to **100 search results** per request.
+🔹 Pas de stockage de clé API – Votre clé API n'est jamais sauvegardée.  
+🔹 Utilise Serper.dev – Une puissante API de recherche Google offrant 2 500 requêtes gratuites sans carte de crédit.  
+🔹 Chaque requête utilise **2 crédits** et récupère jusqu'à **100 résultats de recherche** par requête.
 """
-
-
-
 
 
 CONNECT_TEXT = """
-👤 **Connect with Me:**
+👤 **Connectez-vous avec moi :**
 
-🔗 [Syahid Muhammad](http://syahid.super.site/)
+🔗 [Ben Mallessa Mohamed Amine ](https://www.linkedin.com/in/benmallessa/)
 """
+
 
 APP_INTRO_TEXT = """
-🕷️ **SERP Rank Checker**
-An on-demand SERP checker—powered by your own API. 🚀
+🕷️ **Vérificateur de Rang SERP**
+Un vérificateur SERP à la demande — alimenté par votre propre API. 🚀
 """
 
-API_WARNING = "🚨 API Key is required! Please enter your Serper.dev API key in the sidebar."
+API_WARNING = "🚨 La clé API est requise ! Veuillez entrer votre clé API Serper.dev dans la barre latérale."
 
-KEYWORD_ERROR = "❌ Please enter at least one keyword."
-DOMAIN_ERROR = "❌ Please enter a domain to track."
+KEYWORD_ERROR = "❌ Veuillez entrer au moins un mot-clé."
+
+DOMAIN_ERROR = "❌ Veuillez entrer un domaine à suivre."

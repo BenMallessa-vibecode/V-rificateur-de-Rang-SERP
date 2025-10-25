@@ -3,30 +3,30 @@ import requests
 import pandas as pd
 import time
 
-st.set_page_config(page_title="📝 Bulk Google Reviews by CID", layout="wide")
-st.title("📝 Bulk Google Reviews by CID")
+st.set_page_config(page_title="📝 Avis Google en Masse par CID", layout="wide")
+st.title("📝 Avis Google en Masse par CID")
 
-st.sidebar.header("🔑 API Settings")
-api_key = st.sidebar.text_input("Masukkan API Key Serper.dev kamu", type="password")
-st.sidebar.write("🔗 [Dapatkan API Key di sini](https://serper.dev)")
+st.sidebar.header("🔑 Paramètres API")
+api_key = st.sidebar.text_input("Entrez votre clé API Serper.dev", type="password")
+st.sidebar.write("🔗 [Obtenez votre clé API ici](https://serper.dev)")
 
-# Form input
-cids_text = st.text_area("🆔 Masukkan Daftar CID (1 per baris)", placeholder="3075219648616366458\n1234567890123456789")
-gl = st.selectbox("🌍 Country Code (gl)", ["id", "us", "sg"], index=0)
-hl = st.selectbox("🗣️ Language Code (hl)", ["id", "en"], index=0)
+# Formulaire d'entrée
+cids_text = st.text_area("🆔 Entrez la Liste des CID (1 par ligne)", placeholder="3075219648616366458\n1234567890123456789")
+gl = st.selectbox("🌍 Code Pays (gl)", ["fr", "us", "gb"], index=0)
+hl = st.selectbox("🗣️ Code Langue (hl)", ["fr", "en"], index=0)
 
-if st.button("Ambil Semua Review"):
+if st.button("Récupérer Tous les Avis"):
     if not api_key:
-        st.error("🚨 Masukkan API Key terlebih dahulu!")
+        st.error("🚨 Entrez d'abord la clé API !")
         st.stop()
     if not cids_text.strip():
-        st.error("🚨 Masukkan minimal 1 CID!")
+        st.error("🚨 Entrez au moins 1 CID !")
         st.stop()
 
     cid_list = [cid.strip() for cid in cids_text.splitlines() if cid.strip()]
     all_reviews = []
 
-    progress = st.progress(0, text="Fetching reviews...")
+    progress = st.progress(0, text="Récupération des avis...")
 
     for i, cid in enumerate(cid_list, start=1):
         url = "https://google.serper.dev/reviews"
@@ -51,40 +51,40 @@ if st.button("Ambil Semua Review"):
 
                 all_reviews.append({
                     "CID": cid,
-                    "User Name": user.get("name"),
-                    "User Link": user.get("link"),
-                    "User Reviews": user.get("reviews"),
-                    "User Photos": user.get("photos"),
-                    "User Thumbnail": user.get("thumbnail"),
-                    "Review Snippet": r.get("snippet"),
-                    "Rating": r.get("rating"),
+                    "Nom Utilisateur": user.get("name"),
+                    "Lien Utilisateur": user.get("link"),
+                    "Avis Utilisateur": user.get("reviews"),
+                    "Photos Utilisateur": user.get("photos"),
+                    "Miniature Utilisateur": user.get("thumbnail"),
+                    "Extrait d'Avis": r.get("snippet"),
+                    "Note": r.get("rating"),
                     "Date": r.get("date"),
-                    "ISO Date": r.get("isoDate"),
-                    "Owner Response": response_owner.get("snippet"),
-                    "Owner Response Date": response_owner.get("date"),
-                    "Media Count": len(media),
-                    "Review ID": r.get("id")
+                    "Date ISO": r.get("isoDate"),
+                    "Réponse Propriétaire": response_owner.get("snippet"),
+                    "Date Réponse Propriétaire": response_owner.get("date"),
+                    "Nombre de Médias": len(media),
+                    "ID Avis": r.get("id")
                 })
         else:
-            st.warning(f"❌ Gagal mengambil review untuk CID {cid}: {response.status_code}")
+            st.warning(f"❌ Échec de la récupération des avis pour le CID {cid} : {response.status_code}")
         
-        # Optional: beri jeda agar tidak terlalu cepat (rate limit friendly)
+        # Optionnel : pause pour éviter les limites de taux
         time.sleep(1)
 
-        progress.progress(i / len(cid_list), text=f"{i} dari {len(cid_list)} CID diproses")
+        progress.progress(i / len(cid_list), text=f"{i} sur {len(cid_list)} CID traités")
 
     if not all_reviews:
-        st.warning("Tidak ada review ditemukan dari semua CID.")
+        st.warning("Aucun avis trouvé pour tous les CID.")
     else:
         df = pd.DataFrame(all_reviews)
-        st.success(f"Berhasil mengambil {len(df)} review dari {len(cid_list)} CID.")
+        st.success(f"Récupération réussie de {len(df)} avis pour {len(cid_list)} CID.")
         st.dataframe(df, use_container_width=True)
 
-        # Tombol Download CSV
+        # Bouton de téléchargement CSV
         csv = df.to_csv(index=False).encode("utf-8")
         st.download_button(
-            label="📥 Download Semua Review (.csv)",
+            label="📥 Télécharger Tous les Avis (.csv)",
             data=csv,
-            file_name="bulk_google_reviews.csv",
+            file_name="avis_google_en_masse.csv",
             mime="text/csv"
         )

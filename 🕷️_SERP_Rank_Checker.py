@@ -10,7 +10,7 @@ gc = geonamescache.GeonamesCache()
 countries = [country.name for country in pycountry.countries]
 languages = [f"{lang.alpha_2} - {lang.name}" for lang in pycountry.languages if hasattr(lang, 'alpha_2')]
 
-# 🔥 Ambil semua kota dari geonamescache (tanpa filter negara)
+# Récupérer toutes les villes de geonamescache (sans filtre pays)
 ALL_CITIES = sorted([city["name"] for city in gc.get_cities().values()])
 
 @st.cache_data(ttl=18000)
@@ -32,11 +32,11 @@ def get_serp_results(api_key, keyword, location, lang, site):
     response = requests.post(url, headers=headers, json=payload)
 
     if response.status_code == 403:
-        st.error("🚨 Invalid API Key! Please check your Serper.dev API key.")
+        st.error("🚨 Clé API invalide ! Veuillez vérifier votre clé API Serper.dev.")
         st.stop()
 
     if response.status_code != 200:
-        st.error(f"❌ Error: {response.status_code} - {response.text}")
+        st.error(f"❌ Erreur : {response.status_code} - {response.text}")
         st.stop()
 
     result = response.json()
@@ -55,10 +55,10 @@ def fetch_top_10(results):
 # Streamlit UI
 st.set_page_config(page_title="SERP Rank Checker", layout="wide")
 
-# Sidebar untuk API Key
-st.sidebar.header("🔑 API Settings")
-api_key = st.sidebar.text_input("Enter your Serper.dev API Key", type="password")
-st.sidebar.write("**[Get your API key at Serper.dev](https://serper.dev/)**")
+# Sidebar pour les paramètres API
+st.sidebar.header("🔑 Paramètres API")
+api_key = st.sidebar.text_input("Entrez votre clé API Serper.dev", type="password")
+st.sidebar.write("**[Obtenez votre clé API sur Serper.dev](https://serper.dev/)**")
 
 st.sidebar.markdown("---")
 st.sidebar.markdown(ABOUT_TEXT) 
@@ -70,18 +70,18 @@ st.sidebar.link_button("🧙‍♂️ Connect with Me", "http://syahid.super.sit
 st.title(APP_INTRO_TEXT)
 
 with st.form("serp_form"):
-    keywords = st.text_area("Keywords (one per line)", placeholder="Enter keywords here...")
+    keywords = st.text_area("Mots-clés (un par ligne)", placeholder="Entrez les mots-clés ici...")
 
-    selected_country = st.selectbox("Select Country", options=countries, index=countries.index("Indonesia"))
+    selected_country = st.selectbox("Sélectionnez le Pays", options=countries, index=countries.index("France"))
 
-    default_city = "Jakarta"
+    default_city = "Paris"
     city_index = ALL_CITIES.index(default_city) if default_city in ALL_CITIES else 0
-    selected_city = st.selectbox("Select City (Optional)", options=ALL_CITIES, index=city_index)
+    selected_city = st.selectbox("Sélectionnez la Ville (Optionnel)", options=ALL_CITIES, index=city_index)
 
-    lang = st.selectbox("Select Language", options=languages, index=languages.index("id - Indonesian"))
-    site = sanitize_domain(st.text_input("Domain (e.g., example.com)", placeholder="Enter domain to track"))
+    lang = st.selectbox("Sélectionnez la Langue", options=languages, index=languages.index("fr - French"))
+    site = sanitize_domain(st.text_input("Domaine (ex. example.com)", placeholder="Entrez le domaine à suivre"))
 
-    submitted = st.form_submit_button("Check Rankings")
+    submitted = st.form_submit_button("Vérifier les Classements")
 
 if submitted:
     if not api_key:
@@ -95,12 +95,12 @@ if submitted:
     elif not site:
         st.error(DOMAIN_ERROR)
     else:
-        st.info(f"Fetching SERP rankings for {len(keyword_list)} keywords...")
+        st.info(f"Récupération des classements SERP pour {len(keyword_list)} mots-clés...")
 
         results = []
         top_10_results = {}
 
-        # 🔥 Format lokasi: "City, Country" jika kota dipilih, jika tidak hanya negara
+        # Format de localisation : "Ville, Pays" si ville sélectionnée, sinon seulement pays
         full_location = f"{selected_city}, {selected_country}"
 
         for keyword in keyword_list:
@@ -110,24 +110,24 @@ if submitted:
 
         df = pd.DataFrame(results).drop(columns=["Top_100"])
 
-        # Buat Tabs untuk hasil
-        tab1, tab2 = st.tabs(["📊 SERP Table", "🔍 Top 10 Results"])
+        # Créer des onglets pour les résultats
+        tab1, tab2 = st.tabs(["📊 Tableau SERP", "🔍 Top 10 Résultats"])
 
         with tab1:
-            st.write("### 📊 SERP Results")
+            st.write("### 📊 Résultats SERP")
             st.dataframe(df, use_container_width=True)
 
             # Opsi Download CSV
             csv = df.to_csv(index=False).encode("utf-8")
             st.download_button(
-                label="📥 Download CSV",
+                label="📥 Télécharger CSV",
                 data=csv,
                 file_name="serp_results.csv",
                 mime="text/csv"
             )
 
         with tab2:
-            st.write("### 🔍 Top 10 Search Results for Each Keyword")
+            st.write("### 🔍 Top 10 Résultats de Recherche pour Chaque Mot-Clé")
 
             for keyword, results in top_10_results.items():
                 with st.expander(f"{keyword}"):

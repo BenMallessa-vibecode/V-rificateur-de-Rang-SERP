@@ -4,3 +4,4 @@ requests
 pycountry
 geonamescache
 beautifulsoup4
+dnspython

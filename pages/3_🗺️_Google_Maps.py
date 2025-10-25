@@ -3,22 +3,22 @@ import requests
 import pandas as pd
 import json
 
-st.set_page_config(page_title="🗺️ Google Maps API", layout="wide")
+st.set_page_config(page_title="🗺️ Google Maps", layout="wide")
 
 st.title("🗺️ Google Maps")
-st.write("Find places based on a query and display the results in a table.")
+st.write("Trouvez des lieux basés sur une requête et affichez les résultats dans un tableau.")
 
-api_key = st.sidebar.text_input("Masukkan API Key Serper.dev kamu", type="password")
-st.sidebar.write("🔗 [Dapatkan API Key di sini](https://serper.dev)")
+api_key = st.sidebar.text_input("Entrez votre clé API Serper.dev", type="password")
+st.sidebar.write("🔗 [Obtenez votre clé API ici](https://serper.dev)")
 
-query = st.text_input("🔍 Cari Tempat", placeholder="Contoh: wisata di Solo, cafe di Bandung")
+query = st.text_input("🔍 Rechercher un Lieu", placeholder="Exemple: tourisme à Paris, café à Lyon")
 
-if st.button("Cari Sekarang"):
+if st.button("Rechercher Maintenant"):
     if not api_key:
-        st.error("🚨 Enter the API Key first!")
+        st.error("🚨 Entrez d'abord la clé API !")
         st.stop()
     if not query:
-        st.error("🚨 Enter a search query!")
+        st.error("🚨 Entrez une requête de recherche !")
         st.stop()
 
     url = "https://google.serper.dev/maps"
@@ -31,47 +31,47 @@ if st.button("Cari Sekarang"):
     response = requests.post(url, headers=headers, json=payload)
 
     if response.status_code != 200:
-        st.error(f"Gagal mendapatkan hasil. Kode: {response.status_code}")
+        st.error(f"Échec de l'obtention des résultats. Code: {response.status_code}")
         st.stop()
 
     data = response.json()
     places = data.get("places", [])
-    center_ll = data.get("ll", "Tidak tersedia")
+    center_ll = data.get("ll", "Non disponible")
 
     if not places:
-        st.warning("Tidak ada tempat ditemukan.")
+        st.warning("Aucun lieu trouvé.")
     else:
-        st.success(f"{len(places)} tempat ditemukan. Lokasi peta tengah: `{center_ll}`")
+        st.success(f"{len(places)} lieux trouvés. Position centrale de la carte: `{center_ll}`")
 
-        # Ekstraksi data jadi list of dicts
+        # Extraction des données en liste de dictionnaires
         rows = []
         for p in places:
             rows.append({
                 "Position": p.get("position"),
-                "Name": p.get("title"),
-                "Address": p.get("address"),
+                "Nom": p.get("title"),
+                "Adresse": p.get("address"),
                 "Latitude": p.get("latitude"),
                 "Longitude": p.get("longitude"),
-                "Rating": p.get("rating"),
-                "Rating Count": p.get("ratingCount"),
+                "Note": p.get("rating"),
+                "Nombre de Notes": p.get("ratingCount"),
                 "Type": p.get("type"),
-                "All Types": ", ".join(p.get("types", [])),
-                "Opening Hours": json.dumps(p.get("openingHours", {}), ensure_ascii=False),
-                "Thumbnail": p.get("thumbnailUrl"),
+                "Tous les Types": ", ".join(p.get("types", [])),
+                "Horaires d'Ouverture": json.dumps(p.get("openingHours", {}), ensure_ascii=False),
+                "Miniature": p.get("thumbnailUrl"),
                 "CID": p.get("cid"),
                 "FID": p.get("fid"),
-                "Place ID": p.get("placeId")
+                "ID du Lieu": p.get("placeId")
             })
 
         df = pd.DataFrame(rows)
 
         st.dataframe(df, use_container_width=True)
 
-        # Tombol download CSV
+        # Bouton de téléchargement CSV
         csv = df.to_csv(index=False).encode("utf-8")
         st.download_button(
-            label="📥 Download CSV",
+            label="📥 Télécharger CSV",
             data=csv,
-            file_name="maps_places.csv",
+            file_name="lieux_maps.csv",
             mime="text/csv"
         )
