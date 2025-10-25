@@ -74,22 +74,6 @@ Basé sur `requirements.txt` :
 - `beautifulsoup4` : Parsing HTML pour les extractions.
 - `dnspython` : Validation MX pour les emails.
 
-## 🤝 Contribution et Licence
-
-### Contribution
-
-Les contributions sont les bienvenues ! Pour contribuer :
-1. Forkez le projet.
-2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/nouvelle-fonction`).
-3. Committez vos changements (`git commit -m 'Ajout: nouvelle fonctionnalité'`).
-4. Poussez vers la branche (`git push origin feature/nouvelle-fonction`).
-5. Ouvrez une Pull Request.
-
-Respectez le code existant et ajoutez des tests si possible.
-
-### Licence
-
-Ce projet est sous licence [MIT](LICENSE). Voir le fichier LICENSE pour plus de détails.
 
 ## 💡 Cas d'Usage Pratiques
 
@@ -106,4 +90,5 @@ Ce projet est sous licence [MIT](LICENSE). Voir le fichier LICENSE pour plus de 
 - **Sécurité** : L'outil ne stocke pas votre clé API.
 - **Améliorations** : Intégrez des visualisations avancées pour des graphiques de tendances.
 
-Pour des questions, contactez via le lien dans l'app.
+Pour des questions, contactez via linkedin https://www.linkedin.com/in/benmallessa/
+
