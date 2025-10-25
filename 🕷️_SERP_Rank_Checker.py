@@ -64,7 +64,7 @@ st.sidebar.markdown("---")
 st.sidebar.markdown(ABOUT_TEXT) 
 
 st.sidebar.markdown("---")
-st.sidebar.link_button("🧙‍♂️ Connect with Me", "http://syahid.super.site/", use_container_width=True)
+st.sidebar.link_button("🧙‍♂️ Connect with Me", "https://www.linkedin.com/in/benmallessa/", use_container_width=True)
 
 # Form input
 st.title(APP_INTRO_TEXT)
